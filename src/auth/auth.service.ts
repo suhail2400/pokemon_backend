@@ -80,20 +80,20 @@ export class AuthService {
 
     /* Create a new RefreshToken document if a refresh token
     doesnt already exist against this user or if the token has expired */
-    // const existingTokenResult =
-    //   await this.refreshTokenService.findRefreshTokenByUserId(user._id);
+    const existingTokenResult =
+      await this.refreshTokenService.findRefreshTokenByUserId(user._id);
 
-    //   if (existingTokenResult) {
-    //     try {
-    //       await this.jwtService.verify(existingTokenResult.token, {
-    //         secret: process.env.REFRESH_TOKEN_SECRET,
-    //       });
-    //       console.log('A valid refresh token for this user already exists in DB')
-    //     return existingTokenResult.token;
-    //    } catch (error) {
-    //     throw new InternalServerErrorException('Error during token generation')
-    //    }
-    //   }
+      if (existingTokenResult) {
+        try {
+          await this.jwtService.verify(existingTokenResult.token, {
+            secret: process.env.REFRESH_TOKEN_SECRET,
+          });
+          console.log('A valid refresh token for this user already exists in DB')
+        return existingTokenResult.token;
+       } catch (error) {
+        return token;
+       }
+      }
       // If a valid token still exists in the DB use that instead
     await this.refreshTokenService.createRefreshToken(token, user);
 
