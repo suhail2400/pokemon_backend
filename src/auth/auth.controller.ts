@@ -9,7 +9,7 @@ export class AuthController {
     constructor( private authService: AuthService){}
 
 
-    @Post('signUp')
+    @Post('signup')
     async register(
       @Body('userName') name: string,
       @Body('email') email: string,

@@ -17,6 +17,10 @@ import { PokemonService } from './pokemon/pokemon.service';
 import { UserSchema } from './users/user.model';
 import { PokemonSchema } from './pokemon/pokemon.model';
 import { RefreshTokenSchema } from './refresh.token/refresh-token.model';
+import { NewsService } from './news/news.service';
+import { NewsModule } from './news/news.module';
+import { NewsController } from './news/news.controller';
+import { mongooseConfig } from './mongoose.config';
 
 @Module({
   imports: [
@@ -31,17 +35,22 @@ import { RefreshTokenSchema } from './refresh.token/refresh-token.model';
     ]),
     UserModule,
     OtpModule,
+    NewsModule,
     PokemonModule,
-    MongooseModule.forRoot(process.env.DB_URI),
+    // MongooseModule.forRoot(process.env.DB_URI),
+    MongooseModule.forRootAsync({
+      useFactory: () => mongooseConfig,
+  }),
     AuthModule
   ],
-  controllers: [AppController,AuthController],
+  controllers: [AppController,AuthController,NewsController],
   providers: [AppService,JwtStrategy,
     UserService,
     JwtService,
     RefreshTokenService,
     AuthService,
     PokemonService,
+    NewsService
   ],
 })
 export class AppModule {}
