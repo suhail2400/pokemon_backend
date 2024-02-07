@@ -21,6 +21,7 @@ import { NewsService } from './news/news.service';
 import { NewsModule } from './news/news.module';
 import { NewsController } from './news/news.controller';
 import { mongooseConfig } from './mongoose.config';
+import { NewsSchema } from './news/news.model';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { mongooseConfig } from './mongoose.config';
     }),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     MongooseModule.forFeature([{ name: 'Pokemon', schema: PokemonSchema }]),
+    MongooseModule.forFeature([{ name: 'News', schema: NewsSchema }]),
     MongooseModule.forFeature([
       { name: 'RefreshToken', schema: RefreshTokenSchema },
     ]),
