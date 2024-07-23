@@ -22,6 +22,15 @@ import { NewsModule } from './news/news.module';
 import { NewsController } from './news/news.controller';
 import { mongooseConfig } from './mongoose.config';
 import { NewsSchema } from './news/news.model';
+import { FavouritesSchema } from './favourites/favourite.model';
+import { FavouritesModule } from './favourites/favourites.module';
+import { FavouritesService } from './favourites/favourites.service';
+import { FavouritesController } from './favourites/favourites.controller';
+import { DailyCheckinModule } from './daily_checkin/daily_checkin.module';
+import { DailyCheckinService } from './daily_checkin/daily_checkin.service';
+import { DailyCheckinController } from './daily_checkin/daily_checkin.controller';
+import { DailyCheckinSchema } from './daily_checkin/daily_checkin.model';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -29,9 +38,14 @@ import { NewsSchema } from './news/news.model';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     MongooseModule.forFeature([{ name: 'Pokemon', schema: PokemonSchema }]),
     MongooseModule.forFeature([{ name: 'News', schema: NewsSchema }]),
+    MongooseModule.forFeature([{ name: 'Favourite', schema: FavouritesSchema }]),
+    MongooseModule.forFeature([
+      { name: 'DailyCheckin', schema: DailyCheckinSchema },
+  ]),
     MongooseModule.forFeature([
       { name: 'RefreshToken', schema: RefreshTokenSchema },
     ]),
@@ -39,20 +53,24 @@ import { NewsSchema } from './news/news.model';
     OtpModule,
     NewsModule,
     PokemonModule,
+    FavouritesModule,
     // MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forRootAsync({
       useFactory: () => mongooseConfig,
   }),
-    AuthModule
+    AuthModule,
+    DailyCheckinModule
   ],
-  controllers: [AppController,AuthController,NewsController],
+  controllers: [AppController,AuthController,NewsController,FavouritesController,DailyCheckinController],
   providers: [AppService,JwtStrategy,
     UserService,
     JwtService,
     RefreshTokenService,
     AuthService,
     PokemonService,
-    NewsService
+    NewsService,
+    FavouritesService,
+    DailyCheckinService
   ],
 })
 export class AppModule {}

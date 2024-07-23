@@ -44,8 +44,12 @@ export class AuthService {
         email: user.email,
       });
 
+      // console.log('access',access)
+
       // Generate refresh token
       const refresh = await this.generateRefreshToken(user);
+
+      // console.log('refresh',refresh)
 
 
       return { access, refresh };
@@ -55,9 +59,9 @@ export class AuthService {
   }
 
   private async generateAccessToken(payload: any) :Promise<string>{
-    const access = this.jwtService.sign(payload, {
-      secret: 'asdfgh',
-      expiresIn: '3m',
+    const access = await this.jwtService.sign(payload, {
+      secret:process.env.ACCESS_TOKEN_SECRET,
+      expiresIn: '5m',
     });
     // const refresh = this.jwtService.sign(payload, {
     //   secret: process.env.REFRESH_TOKEN_SECRET,
@@ -73,7 +77,7 @@ export class AuthService {
       { username: user.userName, email: user.email },
 
       {
-        secret:'asdfgh',
+        secret: process.env.REFRESH_TOKEN_SECRET,
         expiresIn: '7d',
       },
     );
@@ -91,6 +95,7 @@ export class AuthService {
           console.log('A valid refresh token for this user already exists in DB')
         return existingTokenResult.token;
        } catch (error) {
+        console.log(error)
         return token;
        }
       }
@@ -112,12 +117,12 @@ export class AuthService {
       console.log('Token is valid');
       // Extract user email from the refresh token
       const decodedToken = this.jwtService.decode(refreshToken) as {
-        username: string;
+        email: string;
       };
-      const username = decodedToken.username;
+      const email = decodedToken.email;
 
       // Generate a new access token
-      const accessToken = await this.generateAccessToken({ username });
+      const accessToken = await this.generateAccessToken({ email });
       return { accessToken };
     }
 

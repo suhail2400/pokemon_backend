@@ -16,13 +16,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: process.env.ACCESS_TOKEN_SECRET
     });
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.userService.findUserByName(payload.username);
+    const user = await this.userService.findUserByEmail(payload.email);
     const userHasRefreshTokenInDB = await this.refreshTokenService.findRefreshTokenByUserId(user._id)
+    console.log('strategy',userHasRefreshTokenInDB)
     if (!user || !userHasRefreshTokenInDB) {
       throw new UnauthorizedException();
     }

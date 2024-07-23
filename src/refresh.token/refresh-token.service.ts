@@ -11,14 +11,15 @@ export class RefreshTokenService {
 
   async createRefreshToken(token:string,user: User): Promise<RefreshToken> {
     const refreshToken = await this.refreshTokenModel.create({token:token,userId:user.id,email:user.email})
-    return refreshToken.save();
+    return  refreshToken.save();
   }
 
-  async findRefreshToken(token: string): Promise<RefreshToken | null> {
-    return this.refreshTokenModel.findOne({ token }).exec();
+  async findRefreshToken(token: string){
+    return await this.refreshTokenModel.findOne({ token }).exec();
   }
-  async findRefreshTokenByUserId(userId: string): Promise<RefreshToken | null> {
-    return this.refreshTokenModel.findOne({ userId:userId }).exec();
+  async findRefreshTokenByUserId(userId: string){
+    console.log('refresh token',await this.refreshTokenModel.findOne({ userId:userId }).exec())
+    return await this.refreshTokenModel.findOne({ userId:userId }).exec();
   }
 
   async deleteRefreshToken(token: string): Promise<void> {
